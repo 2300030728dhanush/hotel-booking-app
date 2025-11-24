@@ -1,0 +1,46 @@
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: hotelcicd-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: "Dhanush@7777"
+      MYSQL_DATABASE: hotel
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - hotel-network
+
+  backend:
+    build: ./backend
+    container_name: hotelcicd-backend
+    ports:
+      - "5000:5000"
+    environment:
+      DB_HOST: mysql
+      DB_USER: root
+      DB_PASS: Dhanush@7777
+      DB_NAME: hotel
+    depends_on:
+      - mysql
+    networks:
+      - hotel-network
+
+  frontend:
+    build: .
+    container_name: hotelcicd-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+    networks:
+      - hotel-network
+
+volumes:
+  mysql_data:
+
+
+networks:
+  hotel-network:
+    driver: bridge
