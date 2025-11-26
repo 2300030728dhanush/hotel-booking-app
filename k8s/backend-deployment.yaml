@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: backend
-        image: hotelcicd-backend:latest
-        imagePullPolicy: Never
+        image: 2300030728dhanush/hotel-backend:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 5000
         env:

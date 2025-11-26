@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: hotelcicd-frontend:latest
-        imagePullPolicy: Never
+        image: 2300030728dhanush/hotel-frontend:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
 ---
