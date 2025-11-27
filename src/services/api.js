@@ -7,6 +7,14 @@ const api = axios.create({
     },
 });
 
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
 export const getHotels = async (params) => {
     const response = await api.get('/hotels', { params });
     return response.data;

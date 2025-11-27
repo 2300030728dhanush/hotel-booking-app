@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { motion } from 'framer-motion';
 import { Plus, Edit, Trash, X } from 'lucide-react';
@@ -25,7 +25,7 @@ const AdminDashboard = () => {
 
     const fetchHotels = async () => {
         try {
-            const response = await axios.get('/api/hotels');
+            const response = await api.get('/hotels');
             setHotels(response.data);
             setLoading(false);
         } catch (error) {
@@ -37,7 +37,7 @@ const AdminDashboard = () => {
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this hotel?')) {
             try {
-                await axios.delete(`/api/hotels/${id}`);
+                await api.delete(`/hotels/${id}`);
                 fetchHotels();
             } catch (error) {
                 console.error('Error deleting hotel:', error);
@@ -56,9 +56,9 @@ const AdminDashboard = () => {
             };
 
             if (currentHotel) {
-                await axios.put(`/api/hotels/${currentHotel.id}`, data);
+                await api.put(`/hotels/${currentHotel.id}`, data);
             } else {
-                await axios.post('/api/hotels', data);
+                await api.post('/hotels', data);
             }
 
             setIsModalOpen(false);

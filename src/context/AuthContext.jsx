@@ -15,7 +15,6 @@ export const AuthProvider = ({ children }) => {
 
         if (storedUser && storedToken) {
             setUser(JSON.parse(storedUser));
-            axios.defaults.headers.common['Authorization'] = `Bearer ${storedToken}`;
         }
         setLoading(false);
     }, []);
@@ -24,14 +23,12 @@ export const AuthProvider = ({ children }) => {
         setUser(userData);
         localStorage.setItem('user', JSON.stringify(userData));
         localStorage.setItem('token', token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     };
 
     const logout = () => {
         setUser(null);
         localStorage.removeItem('user');
         localStorage.removeItem('token');
-        delete axios.defaults.headers.common['Authorization'];
     };
 
     return (
