@@ -27,6 +27,8 @@ spec:
           value: "Dhanush@7777"
         - name: DB_NAME
           value: "hotel"
+        - name: JWT_SECRET
+          value: "supersecretkey"
 ---
 apiVersion: v1
 kind: Service

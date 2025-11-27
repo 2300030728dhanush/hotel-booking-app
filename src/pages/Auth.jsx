@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
+import { useAuth } from '../context/AuthContext';
 
 const Auth = () => {
     const [isLogin, setIsLogin] = useState(true);
@@ -13,6 +14,7 @@ const Auth = () => {
     });
     const [error, setError] = useState('');
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -24,7 +26,7 @@ const Auth = () => {
 
             const response = await axios.post(`${url}${endpoint}`, formData);
 
-            localStorage.setItem('user', JSON.stringify(response.data));
+            login(response.data.user, response.data.token);
             navigate('/home');
         } catch (err) {
             setError(err.response?.data?.message || 'An error occurred');

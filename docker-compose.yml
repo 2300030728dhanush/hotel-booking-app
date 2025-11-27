@@ -22,6 +22,7 @@ services:
       DB_USER: root
       DB_PASS: Dhanush@7777
       DB_NAME: hotel
+      JWT_SECRET: "supersecretkey"
     depends_on:
       - mysql
     networks:

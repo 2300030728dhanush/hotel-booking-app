@@ -1,0 +1,17 @@
+mysql:
+  image: mysql:8.0-debian
+  rootPassword: "Dhanush@7777"
+  database: "hotel"
+  storage: 1Gi
+
+backend:
+  image: 2300030728dhanush/hotel-backend:latest
+  replicas: 1
+  port: 5000
+  serviceType: LoadBalancer
+
+frontend:
+  image: 2300030728dhanush/hotel-frontend:latest
+  replicas: 1
+  port: 80
+  serviceType: LoadBalancer

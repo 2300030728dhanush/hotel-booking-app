@@ -3,10 +3,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Hotel, User } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
+import { useAuth } from '../context/AuthContext';
+
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
     const location = useLocation();
+    const { user, logout } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -28,7 +31,7 @@ const Navbar = () => {
         >
             <div className="container mx-auto px-4 md:px-6">
                 <div className="flex justify-between items-center">
-                    <Link to="/" className="flex items-center gap-2 group">
+                    <Link to="/home" className="flex items-center gap-2 group">
                         <div className="p-2 bg-primary-600 rounded-lg text-white group-hover:bg-primary-700 transition-colors">
                             <Hotel size={24} />
                         </div>
@@ -40,25 +43,45 @@ const Navbar = () => {
                     {/* Desktop Menu */}
                     <div className="hidden md:flex items-center gap-8">
                         <Link
-                            to="/"
+                            to="/home"
                             className={`font-medium hover:text-primary-600 transition-colors ${scrolled ? 'text-slate-600' : 'text-white/90 hover:text-white'
                                 }`}
                         >
                             Home
                         </Link>
-                        <Link
-                            to="/bookings"
-                            className={`font-medium hover:text-primary-600 transition-colors ${scrolled ? 'text-slate-600' : 'text-white/90 hover:text-white'
-                                }`}
-                        >
-                            My Bookings
-                        </Link>
-                        <Link
-                            to="/bookings"
-                            className="px-5 py-2.5 bg-primary-600 text-white rounded-full font-medium hover:bg-primary-700 transition-all hover:shadow-lg active:scale-95"
-                        >
-                            Sign In
-                        </Link>
+                        {user && (
+                            <Link
+                                to="/bookings"
+                                className={`font-medium hover:text-primary-600 transition-colors ${scrolled ? 'text-slate-600' : 'text-white/90 hover:text-white'
+                                    }`}
+                            >
+                                My Bookings
+                            </Link>
+                        )}
+                        {user && user.role === 'admin' && (
+                            <Link
+                                to="/admin"
+                                className={`font-medium hover:text-primary-600 transition-colors ${scrolled ? 'text-slate-600' : 'text-white/90 hover:text-white'
+                                    }`}
+                            >
+                                Admin
+                            </Link>
+                        )}
+                        {user ? (
+                            <button
+                                onClick={logout}
+                                className="px-5 py-2.5 bg-primary-600 text-white rounded-full font-medium hover:bg-primary-700 transition-all hover:shadow-lg active:scale-95"
+                            >
+                                Logout
+                            </button>
+                        ) : (
+                            <Link
+                                to="/"
+                                className="px-5 py-2.5 bg-primary-600 text-white rounded-full font-medium hover:bg-primary-700 transition-all hover:shadow-lg active:scale-95"
+                            >
+                                Sign In
+                            </Link>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -81,9 +104,14 @@ const Navbar = () => {
                         className="md:hidden bg-white border-t border-slate-100 overflow-hidden"
                     >
                         <div className="container mx-auto px-4 py-4 flex flex-col gap-4">
-                            <Link to="/" className="text-slate-600 font-medium py-2">Home</Link>
-                            <Link to="/bookings" className="text-slate-600 font-medium py-2">My Bookings</Link>
-                            <Link to="/bookings" className="btn-primary text-center">Sign In</Link>
+                            <Link to="/home" className="text-slate-600 font-medium py-2">Home</Link>
+                            {user && <Link to="/bookings" className="text-slate-600 font-medium py-2">My Bookings</Link>}
+                            {user && user.role === 'admin' && <Link to="/admin" className="text-slate-600 font-medium py-2">Admin Dashboard</Link>}
+                            {user ? (
+                                <button onClick={logout} className="btn-primary text-center w-full">Logout</button>
+                            ) : (
+                                <Link to="/" className="btn-primary text-center">Sign In</Link>
+                            )}
                         </div>
                     </motion.div>
                 )}

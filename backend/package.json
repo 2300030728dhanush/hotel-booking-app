@@ -1,5 +1,5 @@
 {
-  "name": "hotel-booking-backend",
+  "name": "hotel-booking-cicd-backend",
   "version": "1.0.0",
   "type": "module",
   "scripts": {

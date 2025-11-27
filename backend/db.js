@@ -45,6 +45,7 @@ const User = sequelize.define('User', {
     password: { type: DataTypes.STRING, allowNull: false },
     firstName: { type: DataTypes.STRING },
     lastName: { type: DataTypes.STRING },
+    role: { type: DataTypes.STRING, defaultValue: 'user' },
 });
 
 const Booking = sequelize.define('Booking', {
@@ -105,7 +106,6 @@ export const initDB = async () => {
                         await Room.create({
                             HotelId: hotel.id,
                             type: r.type,
-                            price: r.price,
                             capacity: r.capacity,
                             image: r.image,
                             amenities: r.amenities
@@ -114,6 +114,23 @@ export const initDB = async () => {
                 }
                 console.log('Seeding complete.');
             }
+
+            // Seed Admin User
+            const adminEmail = 'admin@luxestay.com';
+            const adminExists = await User.findOne({ where: { email: adminEmail } });
+            if (!adminExists) {
+                const bcrypt = (await import('bcryptjs')).default;
+                const hashedPassword = await bcrypt.hash('admin123', 10);
+                await User.create({
+                    email: adminEmail,
+                    password: hashedPassword,
+                    firstName: 'Admin',
+                    lastName: 'User',
+                    role: 'admin'
+                });
+                console.log('Admin user seeded.');
+            }
+
             return; // Success
         } catch (error) {
             retries++;

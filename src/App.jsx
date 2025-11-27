@@ -10,6 +10,10 @@ import MyBookings from './pages/MyBookings';
 import Auth from './pages/Auth';
 import { AnimatePresence } from 'framer-motion';
 
+import ProtectedRoute from './components/ProtectedRoute';
+
+import AdminDashboard from './pages/AdminDashboard';
+
 function App() {
   const location = useLocation();
 
@@ -23,8 +27,21 @@ function App() {
             <Route path="/home" element={<Home />} />
             <Route path="/hotels" element={<HotelList />} />
             <Route path="/hotels/:id" element={<HotelDetails />} />
-            <Route path="/book" element={<BookingForm />} />
-            <Route path="/bookings" element={<MyBookings />} />
+            <Route path="/book" element={
+              <ProtectedRoute>
+                <BookingForm />
+              </ProtectedRoute>
+            } />
+            <Route path="/bookings" element={
+              <ProtectedRoute>
+                <MyBookings />
+              </ProtectedRoute>
+            } />
+            <Route path="/admin" element={
+              <ProtectedRoute roles={['admin']}>
+                <AdminDashboard />
+              </ProtectedRoute>
+            } />
           </Routes>
         </AnimatePresence>
       </main>
