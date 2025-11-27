@@ -236,12 +236,25 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
         const bookingData = req.body;
         const { hotelId, roomId, checkIn, checkOut } = bookingData;
 
-        // Calculate total price (simplified)
+        if (!hotelId || !roomId || !checkIn || !checkOut) {
+            return res.status(400).json({ message: 'Missing required fields' });
+        }
+
+        // Calculate total price
         const room = await Room.findByPk(roomId);
         if (!room) return res.status(404).json({ message: 'Room not found' });
 
         const start = new Date(checkIn);
         const end = new Date(checkOut);
+
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            return res.status(400).json({ message: 'Invalid date format' });
+        }
+
+        if (end <= start) {
+            return res.status(400).json({ message: 'Check-out date must be after check-in date' });
+        }
+
         const nights = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
         const totalPrice = nights * room.price;
 
@@ -250,6 +263,7 @@ app.post('/api/bookings', authenticateToken, async (req, res) => {
             ...bookingData,
             HotelId: hotelId,
             RoomId: roomId,
+            UserId: req.user.id, // Associate with logged-in user
             totalPrice
         });
 

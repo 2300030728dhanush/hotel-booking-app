@@ -35,7 +35,26 @@ const BookingForm = () => {
         setIsSubmitting(true);
 
         try {
-            await createBooking({ ...formData, hotelId: hotel.id, roomId: room.id });
+            // Format dates to YYYY-MM-DD
+            const formatDate = (date) => {
+                const d = new Date(date);
+                let month = '' + (d.getMonth() + 1);
+                let day = '' + d.getDate();
+                const year = d.getFullYear();
+
+                if (month.length < 2) month = '0' + month;
+                if (day.length < 2) day = '0' + day;
+
+                return [year, month, day].join('-');
+            };
+
+            await createBooking({
+                ...formData,
+                checkIn: formatDate(formData.checkIn),
+                checkOut: formatDate(formData.checkOut),
+                hotelId: hotel.id,
+                roomId: room.id
+            });
             alert('Booking successful!');
             navigate('/bookings');
         } catch (error) {

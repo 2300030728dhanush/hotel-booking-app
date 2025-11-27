@@ -3,8 +3,11 @@ import { getUserBookings } from '../services/api';
 import { Calendar, MapPin, Clock } from 'lucide-react';
 import { motion } from 'framer-motion';
 
+import { useAuth } from '../context/AuthContext';
+
 const MyBookings = () => {
-    const [email, setEmail] = useState('');
+    const { user } = useAuth();
+    const [email, setEmail] = useState(user?.email || '');
     const [bookings, setBookings] = useState([]);
     const [searched, setSearched] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -23,6 +26,13 @@ const MyBookings = () => {
             setLoading(false);
         }
     };
+
+    // Auto-search if user is logged in
+    React.useEffect(() => {
+        if (user?.email) {
+            handleSearch({ preventDefault: () => { } });
+        }
+    }, [user]);
 
     return (
         <div className="min-h-screen bg-slate-50 py-24">
