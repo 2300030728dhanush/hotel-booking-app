@@ -23,13 +23,13 @@ jobs:
       with:
         context: ./backend
         push: true
-        tags: 2300030728dhanush/hotel-backend:latest
+        tags: 2300030728dhanush/cicdhotelbooking-backend:latest
 
     - name: Build and Push Frontend
       uses: docker/build-push-action@v4
       with:
         context: .
         push: true
-        tags: 2300030728dhanush/hotel-frontend:latest
+        tags: 2300030728dhanush/cicdhotelbooking-frontend:latest
 
 

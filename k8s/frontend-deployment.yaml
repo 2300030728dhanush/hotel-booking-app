@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: 2300030728dhanush/hotel-frontend:latest
+        image: 2300030728dhanush/cicdhotelbooking-frontend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 80
