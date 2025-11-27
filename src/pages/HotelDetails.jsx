@@ -27,7 +27,7 @@ const HotelDetails = () => {
     }, [id]);
 
     const handleBook = (room) => {
-        navigate('/booking', { state: { hotel, room } });
+        navigate('/book', { state: { hotel, room } });
     };
 
     if (loading) {
