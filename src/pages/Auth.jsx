@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import axios from 'axios';
+import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 const Auth = () => {
@@ -21,15 +21,16 @@ const Auth = () => {
         setError('');
 
         try {
-            const endpoint = isLogin ? '/api/auth/login' : '/api/auth/signup';
-            const url = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+            const endpoint = isLogin ? '/auth/login' : '/auth/signup';
 
-            const response = await axios.post(`${url}${endpoint}`, formData);
+            const response = await api.post(endpoint, formData);
 
             login(response.data.user, response.data.token);
             navigate('/home');
         } catch (err) {
-            setError(err.response?.data?.message || 'An error occurred');
+            console.error('Login error:', err);
+            const message = err.response?.data?.message || err.message || 'An error occurred';
+            setError(message);
         }
     };
 
