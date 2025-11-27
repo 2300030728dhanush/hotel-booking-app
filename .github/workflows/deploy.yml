@@ -60,8 +60,28 @@ jobs:
 
     - name: Get Service URL
       run: |
-        echo "Deployment successful!"
-        echo "Waiting for LoadBalancer IP..."
-        # In a real runner with access to the cluster, this would fetch the IP
-        # kubectl get svc frontend -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
-        echo "Your site should be available at the LoadBalancer IP assigned by your cluster."
+        echo "Deployment successful! Waiting for LoadBalancer IP..."
+        
+        # Wait for up to 2 minutes for the LoadBalancer IP to be assigned
+        end=$((SECONDS+120))
+        while [ $SECONDS -lt $end ]; do
+          SERVICE_IP=$(kubectl get svc frontend -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null || true)
+          SERVICE_HOSTNAME=$(kubectl get svc frontend -o jsonpath='{.status.loadBalancer.ingress[0].hostname}' 2>/dev/null || true)
+          
+          if [ -n "$SERVICE_IP" ]; then
+            echo "::notice title=Website Link::http://$SERVICE_IP"
+            echo "Website is available at: http://$SERVICE_IP"
+            exit 0
+          fi
+          
+          if [ -n "$SERVICE_HOSTNAME" ]; then
+            echo "::notice title=Website Link::http://$SERVICE_HOSTNAME"
+            echo "Website is available at: http://$SERVICE_HOSTNAME"
+            exit 0
+          fi
+          
+          echo "Waiting for external IP..."
+          sleep 10
+        done
+        
+        echo "::warning::External IP not assigned yet. Please check your cloud provider console."
